@@ -7,12 +7,8 @@ var store = new Pathwise(todos);
 
 var _ = require('lodash');
 
-// View tasks depending on selection
-var status = process.argv.slice(2)[0]; // Selects the correct list regarding status
-var dueDate = process.argv.slice(2)[1] // Selects the correct list regarding due date
-
 // Fetches all task-objects from the store as one big object
-function view(){
+function view(dueDate, status){
 	store.get([], function(err, objectList){
 
 		// For displaying the tasks in the shell
