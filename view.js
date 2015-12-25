@@ -5,47 +5,61 @@ var level = require('level');
 var todos = level('todos');
 var store = new Pathwise(todos); 
 
+var _ = require('lodash');
+
 // View tasks depending on selection
-var selector = process.argv.slice(2); // Selects the correct list regarding time or status: all, today, open, done etc. 
+var status = process.argv.slice(2)[0]; // Selects the correct list regarding status
+var dueDate = process.argv.slice(2)[1] // Selects the correct list regarding due date
 
 // Fetches all task-objects from the store as one big object
-store.get([], function(err, objectList){
-	var finalList = [];
+function view(){
+	store.get([], function(err, objectList){
 
-	//This is supposed to do: the incoming data from objectList ... 
-	objectList.on('data', function(objects){
-		console.log(objects);
+		// For displaying the tasks in the shell
+		var header;
+		var hash = '#';
+		var result ='';
+		var footer = multiplyString(hash, 50);
 
-		// should extract each object in the list and ...
-		for(var object in objects){
-			// get it's properties
-			store.get([object], function(error, objectItem){
-				// if the status property is specified in the console input ..
-				if (objectItem.status === selector[0]) {
-					// add the task stored in this object to the finalList array
-					finalList.push(objectItem.task);
-				}
-			});
-		} 
+		function multiplyString (string, times){
+			return (new Array(times + 1).join(string));
+		}
+
+		// For filtering the tasks depending on input
+		var filter;
+		var filteredObject;
+		
+		if (dueDate && status) {
+			filter = {status: status, dueDate: dueDate}; 
+			filteredObject = _.filter(objectList, filter);
+			header = '\n' + multiplyString(hash, 10) + ' Your ' + filter['status'] + ' tasks ' + filter['dueDate'] + ' ' + multiplyString(hash, 20) + '\n';
+
+		} else if (status) {
+			filter = {status: status};
+			filteredObject = _.filter(objectList, filter);
+			header = '\n' + multiplyString(hash, 10) + ' Your ' + filter['status'] + ' tasks ' + multiplyString(hash, 20) + '\n';
+
+		} else {
+			filteredObject = _.filter(objectList);
+			header = '\n' + multiplyString(hash, 10) + ' Your tasks ' + multiplyString(hash, 20) + '\n';
+		}
+
+		
+		function logEachTask(element, index, array){
+			result += element['id'] + ' - ' + element['status'] + ' - ' + element['dueDate'] + ' - ' + element['task'] + '\n' ;
+			return result;
+		}
+
+		filteredObject.forEach(logEachTask);
+
+		console.log(header + '\n' +
+					result + '\n' +
+					footer + '\n');
+
 	});
+}
 
-	// once the data flow has finished ...
-	objectList.on('end', function(){
-		// log out the finalList with all tasks that match the console input
-		console.log(finalList);
-	});
-	
-});
-
-
-// ToDo: 
-// Better way of displaying the tasks 
-
-// Questions:
-// Why is the get - on logic not working properly?  
-// Are modules the best way to control the app or are there some console shortcuts? 
-//
-
+module.exports.view = view; 
 
 
 
@@ -53,6 +67,35 @@ store.get([], function(err, objectList){
 
 
 // OLD TEST - DIDN'T WORK PROPERLY
+
+// var finalList = [];
+
+	// //This is supposed to do: the incoming data from objectList ... 
+	// objectList.on('data', function(objects){
+	// 	console.log(objects);
+
+	// 	// should extract each object in the list and ...
+	// 	for(var object in objects){
+	// 		// get it's properties
+	// 		store.get([object], function(error, objectItem){
+	// 			// if the status property is specified in the console input ..
+	// 			if (objectItem.status === selector[0]) {
+	// 				// add the task stored in this object to the finalList array
+	// 				finalList.push(objectItem.task);
+	// 			}
+	// 		});
+	// 	} 
+	// });
+
+	// // once the data flow has finished ...
+	// objectList.on('end', function(){
+	// 	// log out the finalList with all tasks that match the console input
+	// 	console.log(finalList);
+	// });
+	
+	//var values = Object.values(objectList);
+
+// TEST
 
 // store.get([], function(err, objectList){
 // 	for(var object in objectList){

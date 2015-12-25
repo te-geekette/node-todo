@@ -4,13 +4,18 @@
   "description": "",
   "main": "create.js",
   "dependencies": {
+    "commander": "^2.9.0",
     "level": "^1.4.0",
+    "lodash": "^3.10.1",
     "node-uuid": "^1.4.7"
   },
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Tina Egolf",
+  "license": "ISC",
+  "bin": {
+    "todos": "./index.js"
+  }
 }
