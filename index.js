@@ -1,11 +1,8 @@
 #!/usr/bin/env node
 
 var input = require('commander');
-var view = require('./view.js'); 
-// var create = require('./create.js'); 
-// var update = require('./check.js');
-// var Pathwise = require('level-pathwise'); 
-// var level = require('level'); 
+var main = require('./main.js'); 
+
 
 input
 	.arguments('<cmd>')
@@ -16,18 +13,16 @@ input
 
 		switch(cmd) {
 			case 'create':
-				view.create(input.task, input.dueDate, input.status);
+				main.create(input.task, input.dueDate, input.status);
 				break;
 			case 'view':
-				view.view(input.dueDate, input.status);
+				main.view(input.dueDate, input.status);
 				break; 
 			case 'update':
-				console.log('Update a task');
-				// Not sure, input.args is the right thing
-				// var id = input.args; 
-				// update.update(id);
+				var id = process.argv.slice(3); 
+				main.update(id);
 				break; 
-			case undefined: 
+			case undefined: // doesn't work
 				console.log("Please specify a command first: 'view', 'create' or 'update'.");
 				break; 
 		}
@@ -35,6 +30,3 @@ input
 	})
 	.parse(process.argv);
 
-// PROBLEM: 
-// It worked for view but when I ran create for the first time, I got the error
-// After that nothing worked anymore

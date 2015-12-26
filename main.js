@@ -13,7 +13,6 @@ var _ = require('lodash');
 function view(dueDate, status){
 	// Fetches all task-objects from the store as one big object
 	store.get([], function(err, objectList){
-		console.log(objectList);
 
 		// For displaying the tasks in the shell
 		var header;
@@ -104,6 +103,27 @@ function create(task, dueDate, status){
 	}
 }
 
+//// MARKING A TASK AS CLOSED 
+
+function update(taskIdList){
+	var batchArray = [];
+
+	taskIdList.forEach(createBatchArray);
+
+	function createBatchArray(element, index, array){
+		var command = { type: 'put', path: [element], data: { status: 'closed'}};
+		batchArray.push(command);
+		return batchArray; 
+	} 
+
+	store.batch(batchArray, function(){
+		console.log('Great job! Another step towards freedom!');
+	}); 
+}
+
+//// EXPORTS 
+
+module.exports.update = update; 
 module.exports.view = view; 
 module.exports.create = create; 
 
