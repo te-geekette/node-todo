@@ -22,6 +22,10 @@ input
 				var id = process.argv.slice(3); 
 				main.update(id);
 				break; 
+			case 'delete':
+				var id = process.argv.slice(3); 
+				main.deleteTask(id);
+				break; 
 			case undefined: // doesn't work
 				console.log("Please specify a command first: 'view', 'create' or 'update'.");
 				break; 

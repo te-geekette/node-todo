@@ -103,7 +103,7 @@ function create(task, dueDate, status){
 	}
 }
 
-//// MARKING A TASK AS CLOSED 
+//// MARKING ONE OR MORE TASKS AS CLOSED 
 
 function update(taskIdList){
 	var batchArray = [];
@@ -121,104 +121,29 @@ function update(taskIdList){
 	}); 
 }
 
+//// DELETING ONE OR MORE TASKS
+
+function deleteTask(taskIdList){
+	var batchArray = [];
+
+	taskIdList.forEach(createBatchArray);
+
+	function createBatchArray(element, index, array){
+		var command = { type: 'del', path: [element]};
+		batchArray.push(command);
+		return batchArray; 
+	} 
+
+	store.batch(batchArray, function(){
+		console.log('Perfect! Your tasks were deleted.');
+	}); 
+}
+
 //// EXPORTS 
 
-module.exports.update = update; 
+
 module.exports.view = view; 
 module.exports.create = create; 
-
-
-
-
-
-
-// OLD TEST - DIDN'T WORK PROPERLY
-
-// var finalList = [];
-
-	// //This is supposed to do: the incoming data from objectList ... 
-	// objectList.on('data', function(objects){
-	// 	console.log(objects);
-
-	// 	// should extract each object in the list and ...
-	// 	for(var object in objects){
-	// 		// get it's properties
-	// 		store.get([object], function(error, objectItem){
-	// 			// if the status property is specified in the console input ..
-	// 			if (objectItem.status === selector[0]) {
-	// 				// add the task stored in this object to the finalList array
-	// 				finalList.push(objectItem.task);
-	// 			}
-	// 		});
-	// 	} 
-	// });
-
-	// // once the data flow has finished ...
-	// objectList.on('end', function(){
-	// 	// log out the finalList with all tasks that match the console input
-	// 	console.log(finalList);
-	// });
-	
-	//var values = Object.values(objectList);
-
-// TEST
-
-// store.get([], function(err, objectList){
-// 	for(var object in objectList){
-// 			store.get([object], function(error, objectItem){
-// 				console.log(selector[0], objectItem.status);
-// 				if (objectItem.status === selector[0]) {
-// 					finalList.push(objectItem.task);
-// 				}
-// 				// console.log(objectItem.task + ': ' + objectItem.status); 
-// 			});
-// 	} 
-// });
-
-// ---------
-
-// function logList(element){
-// 	console.log(element);
-// }
-
-// function displayList(selector) {
-// 	var taskList = [];
-// 	var list = db.createValueStream(); 
-
-// 	list.on('data', function(data){
-// 		taskList.push(data); 
-// 	}); 
-
-// 	list.on('end', function(){
-// 		taskList.forEach(logList); 
-// 	}); 
-// }
-
-// displayList(selector); 
-
-// -----------
-
-// EXPERIMENT
-
-// function logList(element){
-// 	console.log(element);
-// }
-
-// function displayList(selector) {
-// 	var taskList = [];
-// 	var testList = todos.createValueStream();
-
-// 	testList.on('data', function(data){
-// 		taskList.push(data); 
-// 	}); 
-
-// 	testList.on('end', function(){
-// 		console.log(taskList);
-// 		//taskList.forEach(logList); 
-// 	}); 
-// }
-
-//displayList(selector); 
-
-
+module.exports.update = update; 
+module.exports.deleteTask = deleteTask; 
 
