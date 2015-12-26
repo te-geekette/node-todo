@@ -1,10 +1,10 @@
-var Pathwise = require('level-pathwise'); 
-var level = require('level');
+// var Pathwise = require('level-pathwise'); 
+// var level = require('level');
 
-var todos = level('todos');
-var store = new Pathwise(todos);
+// var todos = level('todos');
+// var store = new Pathwise(todos);
 
-var todoCount = level('count');
+// var todoCount = level('count');
 
 
 //////// Cleanup Count /////// 

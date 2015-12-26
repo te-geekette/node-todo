@@ -4,12 +4,16 @@ var level = require('level');
 
 var todos = level('todos');
 var store = new Pathwise(todos); 
+var todoId = level('id');
 
 var _ = require('lodash');
 
-// Fetches all task-objects from the store as one big object
+//// VIEWING A LIST WITH TODOS
+
 function view(dueDate, status){
+	// Fetches all task-objects from the store as one big object
 	store.get([], function(err, objectList){
+		console.log(objectList);
 
 		// For displaying the tasks in the shell
 		var header;
@@ -55,7 +59,53 @@ function view(dueDate, status){
 	});
 }
 
+//// CREATING A NEW TODO ITEM
+
+function create(task, dueDate, status){
+
+	// Create a custom id for the task (to make it easier to retrieve and update later)
+	var id; 
+	var idList = []; 
+	var idStream = todoId.createValueStream();
+
+	idStream.on('data', function(data){
+		idList.push(data);
+	});
+	idStream.on('end', function(){
+		if (idList.length === 0){
+			todoId.put('Count', '1');
+			id = 1; 
+			createTask(id, task, dueDate, status);
+
+		} else {
+			id = parseInt(idList[0]) + 1 ;
+			todoId.put('Count', id ); 
+			createTask(id, task, dueDate, status);
+		}
+	}); 
+
+
+	// Create a task 
+	function createTask (id, task, dueDate, status){
+		store.put([], {
+			[id]: {
+				id: id,
+				task: task,
+				dueDate: dueDate ? dueDate : 'At some point',
+				createDate: new Date(), 
+				status: status ? status : 'open' 
+			}
+		}, function(err){
+			if(err){
+				console.error(err.message);
+			}
+			console.log('Your task was successfully created.');
+		});
+	}
+}
+
 module.exports.view = view; 
+module.exports.create = create; 
 
 
 

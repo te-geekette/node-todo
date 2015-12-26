@@ -6,8 +6,9 @@
   "dependencies": {
     "commander": "^2.9.0",
     "level": "^1.4.0",
-    "lodash": "^3.10.1",
-    "node-uuid": "^1.4.7"
+    "level-pathwise": "^3.0.2",
+    "node-uuid": "^1.4.7",
+    "lodash": "^3.10.1"
   },
   "devDependencies": {},
   "scripts": {
@@ -16,6 +17,6 @@
   "author": "Tina Egolf",
   "license": "ISC",
   "bin": {
-    "todos": "./index.js"
+    "todo": "./index.js"
   }
 }
