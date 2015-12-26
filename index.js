@@ -2,6 +2,7 @@
 
 var input = require('commander');
 var main = require('./main.js'); 
+var clear = require('clear');
 
 
 input
@@ -16,6 +17,7 @@ input
 				main.create(input.task, input.dueDate, input.status);
 				break;
 			case 'view':
+				clear();
 				main.view(input.dueDate, input.status);
 				break; 
 			case 'update':

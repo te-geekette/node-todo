@@ -4,11 +4,13 @@
   "description": "",
   "main": "create.js",
   "dependencies": {
+    "chalk": "^1.1.1",
+    "clear": "^0.0.1",
     "commander": "^2.9.0",
     "level": "^1.4.0",
     "level-pathwise": "^3.0.2",
-    "node-uuid": "^1.4.7",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "node-uuid": "^1.4.7"
   },
   "devDependencies": {},
   "scripts": {

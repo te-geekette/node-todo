@@ -1,6 +1,7 @@
 // Prerequisits
 var Pathwise = require('level-pathwise'); 
 var level = require('level');
+var chalk = require('chalk');
 
 var todos = level('todos');
 var store = new Pathwise(todos); 
@@ -16,9 +17,9 @@ function view(dueDate, status){
 
 		// For displaying the tasks in the shell
 		var header;
-		var hash = '#';
+		var hash = chalk.white('#');
 		var result ='';
-		var footer = multiplyString(hash, 50);
+		var footer = multiplyString(hash, 45);
 
 		function multiplyString (string, times){
 			return (new Array(times + 1).join(string));
@@ -31,28 +32,41 @@ function view(dueDate, status){
 		if (dueDate && status) {
 			filter = {status: status, dueDate: dueDate}; 
 			filteredObject = _.filter(objectList, filter);
-			header = '\n' + multiplyString(hash, 10) + ' Your ' + filter['status'] + ' tasks ' + filter['dueDate'] + ' ' + multiplyString(hash, 20) + '\n';
+			header = '\n' + multiplyString(hash, 10) + chalk.green.bold(' Your ' + filter['status'] + ' tasks ' + filter['dueDate'] + ' ') + multiplyString(hash, 20) + '\n';
 
 		} else if (status) {
 			filter = {status: status};
 			filteredObject = _.filter(objectList, filter);
-			header = '\n' + multiplyString(hash, 10) + ' Your ' + filter['status'] + ' tasks ' + multiplyString(hash, 20) + '\n';
+			header = '\n' + multiplyString(hash, 10) + chalk.green.bold(' Your ' + filter['status'] + ' tasks ') + multiplyString(hash, 20) + '\n';
+
+		} else if (dueDate){
+			filter = {dueDate: dueDate};
+			filteredObject = _.filter(objectList, filter);
+			header = '\n' + multiplyString(hash, 10) + chalk.green.bold(' Your tasks ' + filter['dueDate'] + ' ') + multiplyString(hash, 20) + '\n';
 
 		} else {
 			filteredObject = _.filter(objectList);
-			header = '\n' + multiplyString(hash, 10) + ' Your tasks ' + multiplyString(hash, 20) + '\n';
+			header = '\n' + multiplyString(hash, 10) + chalk.green.bold(' Your tasks ') + multiplyString(hash, 20) + '\n';
 		}
 
 		
 		function logEachTask(element, index, array){
-			result += element['id'] + ' - ' + element['status'] + ' - ' + element['dueDate'] + ' - ' + element['task'] + '\n' ;
+			var status; 
+
+			if (element['status'] === 'open'){
+				status = chalk.yellow.bold(element['status']); 
+			} else {
+				status = element['status']; 
+			}
+
+			result += element['id'] + ' - ' + status + ' - ' + element['dueDate'] + ' - ' + chalk.yellow.bold(element['task']) + '\n' ;
 			return result;
 		}
 
 		filteredObject.forEach(logEachTask);
 
 		console.log(header + '\n' +
-					result + '\n' +
+					chalk.white(result) + '\n' +
 					footer + '\n');
 
 	});
