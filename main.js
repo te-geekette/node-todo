@@ -77,8 +77,8 @@ function create(task, dueDate, status){
 			createTask(id, task, dueDate, status);
 
 		} else {
-			id = parseInt(idList[0]) + 1 ;
-			todoId.put('Count', id ); 
+			id = parseInt(idList[0]) + 1;
+			todoId.put('Count', id); 
 			createTask(id, task, dueDate, status);
 		}
 	}); 
